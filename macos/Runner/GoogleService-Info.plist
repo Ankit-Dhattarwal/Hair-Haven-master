@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>779734123542-d1kb6vgrd7enm4henuo983obd7hmf29g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.779734123542-d1kb6vgrd7enm4henuo983obd7hmf29g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>779734123542-mq0no1mm1g6ffje9t0rmjv2gr83rfmt0.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDMpcXSbwmHjQWHkUjnSpcxs3bVhRSjVs8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>779734123542</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.hairHaven</string>
+	<key>PROJECT_ID</key>
+	<string>hair-haven-2faf4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hair-haven-2faf4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:779734123542:ios:c7c0389aea68ce5b25a137</string>
+</dict>
+</plist>

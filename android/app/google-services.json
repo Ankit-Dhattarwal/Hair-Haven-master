@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "779734123542",
+    "project_id": "hair-haven-2faf4",
+    "storage_bucket": "hair-haven-2faf4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779734123542:android:5c1098d2d3f8f47f25a137",
+        "android_client_info": {
+          "package_name": "com.example.hair_haven"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779734123542-mq0no1mm1g6ffje9t0rmjv2gr83rfmt0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hair_haven",
+            "certificate_hash": "71070f4c174d907021018b1e9a27490fa529c6d9"
+          }
+        },
+        {
+          "client_id": "779734123542-41it1lm3g3q8t6puv3f1luf1doqmmq7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_nmilk31fxe08v3PUqs6SSB8nwAFRLug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779734123542-41it1lm3g3q8t6puv3f1luf1doqmmq7j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "779734123542-d1kb6vgrd7enm4henuo983obd7hmf29g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hairHaven"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
