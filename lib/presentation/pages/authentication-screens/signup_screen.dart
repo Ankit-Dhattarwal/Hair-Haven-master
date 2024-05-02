@@ -1,13 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hair_haven/features/authentication/controllers/signup_controller.dart';
 import 'package:hair_haven/presentation/pages/authentication-screens/otp_verify.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../core/theme/mycolors.dart';
-import 'ForgetPassword-screens/forget_password_emailVerifacation.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -17,52 +16,67 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController countryController = TextEditingController();
 
   final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _phoneNumberController = TextEditingController();
 
-   Gender? _selectedGender;
+  Future<void> sendOTP(String phoneNumber) async {
+    final String fullName = _fullNameController.text;
+    final String formattedPhoneNumber = '+91$phoneNumber';
 
-  Future<void> registerUser() async {
-      final String fullName = _fullNameController.text;
-      final String email = _emailController.text;
-      final String phoneNumber = '+91${_phoneNumberController.text}';
-      String? gender;
-      if (_selectedGender != null) {
-        gender = _selectedGender.toString().split('.').last;
-      }
+    // First, authenticate the user by making a POST request to /api/user/login
+    final loginUrl = Uri.parse('http://10.0.2.2:6005/api/user/login');
 
-      final url = Uri.parse('http://10.0.2.2:5005/api/user/register');
+    try {
+      final loginResponse = await http.post(
+        loginUrl,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'phoneNumber': formattedPhoneNumber,
+        }),
+      );
 
-      try {
-        final response = await http.post(
-          url,
+      if (loginResponse.statusCode == 200) {
+        // Authentication successful, now make a GET request to /api/user/generateotp
+        final otpUrl = Uri.parse('http://10.0.2.2:6005/api/user/generateotp');
+
+        final otpResponse = await http.get(
+          otpUrl,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: jsonEncode(<String, String>{
-            'fullname': fullName,
-            'email': email,
-            'phone': phoneNumber,
-            'gender': gender ?? '',
-          }),
         );
-        if (response.statusCode == 201) {
-          print('User registered successfully');
-         // Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPasswordVerification()));
-        } else {
-          print('Failed to register user. Status code: ${response.statusCode}');
-          print('Response body: ${response.body}');
-        }
-      } catch (e) {
-        print('Exception occurred: $e');
-      }
-    }
 
+        if (otpResponse.statusCode == 200) {
+          // OTP sent successfully
+          print('OTP sent successfully');
+          // Navigate to the OTP verification screen or perform any other action here
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context){
+                return const OtpScreen();
+              })
+          );
+        } else {
+          // Failed to send OTP
+          print('Failed to send OTP. Status code: ${otpResponse.statusCode}');
+          print('Response body: ${otpResponse.body}');
+          // Handle OTP sending failure
+        }
+      } else {
+        // Failed to authenticate user
+        print('Failed to authenticate user. Status code: ${loginResponse.statusCode}');
+        print('Response body: ${loginResponse.body}');
+        // Handle authentication failure
+      }
+    } catch (e) {
+      // Exception occurred
+      print('Exception occurred: $e');
+      // Handle any exceptions
+    }
+  }
 
   @override
   void initState() {
@@ -90,12 +104,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 20.h,
                         ),
                         Text(
-                          "Sign up to your account",
+                          "Sign up/Sign In to your account",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 22.sp),
+                              fontWeight: FontWeight.w600, fontSize: 20.sp),
                         ),
                         SizedBox(
-                          height: 30.h,
+                          height: 40.h,
                         ),
                         TextFormField(
                           controller: _fullNameController,
@@ -108,20 +122,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: "E-Mail",
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
                         SizedBox(
                           height: 20.h,
                         ),
@@ -167,57 +167,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 20.h,
+                          height: 35.h,
                         ),
                         Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<Gender>(
-                              value: _selectedGender,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedGender = value;
-                                });
-                              },
-                              items: [
-                                DropdownMenuItem(
-                                  value: Gender.Male,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.male),
-                                      SizedBox(width: 5),
-                                      Text('Male'),
-                                    ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Icons.check_circle_outline, color: Colors.green,),
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        const TextSpan(
+                                          text: 'By signing up you agree to the ',
+                                          style: TextStyle(color: Colors.black), // Default text color
+                                        ),
+                                        TextSpan(
+                                          text: 'Terms of service',
+                                          style: TextStyle(color: Colors.green.shade800), // Color for "Terms of service"
+                                          // You can also add onTap handler for clicking on "Terms of service"
+                                          // onTap: () {
+                                          //   // Handle onTap for Terms of service
+                                          // },
+                                        ),
+                                        const TextSpan(
+                                          text: ' and ',
+                                          style: TextStyle(color: Colors.black), // Default text color
+                                        ),
+                                        TextSpan(
+                                          text: 'Privacy policy',
+                                          style: TextStyle(color: Colors.green.shade800), // Color for "Privacy policy"
+                                          // You can also add onTap handler for clicking on "Privacy policy"
+                                          // onTap: () {
+                                          //   // Handle onTap for Privacy policy
+                                          // },
+                                        ),
+                                        const TextSpan(
+                                          text: '.',
+                                          style: TextStyle(color: Colors.black), // Default text color
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                DropdownMenuItem(
-                                  value: Gender.Female,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.female),
-                                      SizedBox(width: 5),
-                                      Text('Female'),
-                                    ],
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: Gender.Other,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.transgender),
-                                      SizedBox(width: 5),
-                                      Text('Other'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              hint: Text('Gender'),
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -225,12 +222,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            registerUser();
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context){
-                            //       return const OtpScreen();
-                            //     })
-                            // );
+                            // Get the phone number entered by the user
+                            String phoneNumber = _phoneNumberController.text;
+                            // Call the sendOTP method with the phone number
+                            sendOTP(phoneNumber);
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -238,7 +233,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             minimumSize:
                                 MaterialStateProperty.all(Size(321.w, 38.h)),
                             shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                              borderRadius: BorderRadius.circular(10),
                             )),
                           ),
                           child: Text(
@@ -320,5 +315,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
-enum Gender { Male, Female, Other }

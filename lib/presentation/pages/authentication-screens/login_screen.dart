@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hair_haven/core/theme/mycolors.dart';
 import 'package:hair_haven/presentation/pages/main_screens/location_screen.dart';
 import 'package:hair_haven/presentation/pages/authentication-screens/signup_screen.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'ForgetPassword-screens/forget_password_emailVerifacation.dart';
 
@@ -38,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w600, fontSize: 22.sp),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 30.w),
+                        padding: EdgeInsets.only(top: 10.w),
                         child: Row(
                           children: [
                             Text(
@@ -60,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: MyColors.primaryColor,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
                             )
@@ -74,11 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: InputDecoration(
                           hintText: "Phone Number",
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
+                              EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                             borderRadius: BorderRadius.circular(10),
                           ),
+                          hintStyle: TextStyle(fontSize: 20.0),
                         ),
                       ),
                       SizedBox(
@@ -87,14 +87,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         obscureText: _obscureText,
                         decoration: InputDecoration(
-                          labelText: 'Enter your Password',
+                          hintText: 'Enter your Password',
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
+                              EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          suffixIcon: IconButton(
+                          hintStyle: TextStyle(fontSize: 20.0,fontFamily: 'Poppins',),
+                        suffixIcon: IconButton(
                             icon: Icon(
                               _obscureText
                                   ? Icons.visibility
@@ -150,8 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               MaterialStateProperty.all(MyColors.primaryColor),
                           minimumSize:
                               MaterialStateProperty.all(Size(321.w, 38.h)),
-                          shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
+                          shape: MaterialStateProperty.all( RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           )),
                         ),
                         child: Text(

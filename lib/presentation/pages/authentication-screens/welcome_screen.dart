@@ -13,10 +13,10 @@ class WelcomeScreen extends StatefulWidget {
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 
-  static bool isFirstTime() {
-    final storage = GetStorage();
-    return storage.read('is_first_time') ?? true;
-  }
+  // static bool isFirstTime() {
+  //   final storage = GetStorage();
+  //   return storage.read('is_first_time') ?? true;
+  // }
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
@@ -25,19 +25,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      checkFirstTime();
+      // checkFirstTime();
     });
   }
 
-  void checkFirstTime() {
-    bool isFirstTime = WelcomeScreen.isFirstTime();
-    if (!isFirstTime) {
-      /// If not the first time, navigate to the login screen
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return SignUpScreen();
-      }));
-    }
-  }
+  // void checkFirstTime() {
+  //   bool isFirstTime = WelcomeScreen.isFirstTime();
+  //   if (!isFirstTime) {
+  //     /// If not the first time, navigate to the login screen
+  //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+  //       return SignUpScreen();
+  //     }));
+  //   }
+  // }
 
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -134,14 +134,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   shape: MaterialStateProperty.all(CircleBorder()),
                 ),
                 onPressed: () {
-                  final storage = GetStorage();
-                  storage.write('is_first_time', false);
-                  _currentPage < 2
-                      ? _pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  )
-                      : Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  // final storage = GetStorage();
+                  // storage.write('is_first_time', false);
+                  // _currentPage < 2
+                  //     ? _pageController.nextPage(
+                  //   duration: Duration(milliseconds: 300),
+                  //   curve: Curves.easeInOut,
+                  // )
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return LoginScreen();
                   }));
                 },
