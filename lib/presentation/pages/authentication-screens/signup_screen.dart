@@ -20,12 +20,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  bool _isFullNameFilled = false;
+  bool _isPhoneNumberFilled = false;
 
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
   Future<void> sendOTP(String phoneNumber) async {
     final String fullName = _fullNameController.text;
     final String formattedPhoneNumber = '+91$phoneNumber';
 
-    // First, authenticate the user by making a POST request to /api/user/login
     final loginUrl = Uri.parse('http://10.0.2.2:6005/api/user/login');
 
     try {
@@ -40,7 +49,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if (loginResponse.statusCode == 200) {
-        // Authentication successful, now make a GET request to /api/user/generateotp
         final otpUrl = Uri.parse('http://10.0.2.2:6005/api/user/generateotp');
 
         final otpResponse = await http.get(
@@ -51,30 +59,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         if (otpResponse.statusCode == 200) {
-          // OTP sent successfully
           print('OTP sent successfully');
-          // Navigate to the OTP verification screen or perform any other action here
           Navigator.push(context,
-              MaterialPageRoute(builder: (context){
+              MaterialPageRoute(builder: (context) {
                 return const OtpScreen();
               })
           );
         } else {
-          // Failed to send OTP
           print('Failed to send OTP. Status code: ${otpResponse.statusCode}');
           print('Response body: ${otpResponse.body}');
-          // Handle OTP sending failure
         }
       } else {
-        // Failed to authenticate user
-        print('Failed to authenticate user. Status code: ${loginResponse.statusCode}');
+        print('Failed to authenticate user. Status code: ${loginResponse
+            .statusCode}');
         print('Response body: ${loginResponse.body}');
-        // Handle authentication failure
       }
     } catch (e) {
-      // Exception occurred
       print('Exception occurred: $e');
-      // Handle any exceptions
     }
   }
 
@@ -82,6 +83,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     countryController.text = "+91";
     super.initState();
+    _fullNameController.addListener(_onFullNameChanged);
+    _phoneNumberController.addListener(_onPhoneNumberChanged);
+  }
+
+  void _onFullNameChanged() {
+    setState(() {
+      _isFullNameFilled = _fullNameController.text.isNotEmpty;
+    });
+  }
+
+  void _onPhoneNumberChanged() {
+    setState(() {
+      _isPhoneNumberFilled = _phoneNumberController.text.isNotEmpty;
+    });
+  }
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,7 +136,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _fullNameController,
                           decoration: InputDecoration(
                             hintText: "Name",
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius: BorderRadius.circular(10),
@@ -149,20 +171,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               const Text(
                                 "|",
                                 style:
-                                    TextStyle(fontSize: 33, color: Colors.grey),
+                                TextStyle(fontSize: 33, color: Colors.grey),
                               ),
                               const SizedBox(
                                 width: 10,
                               ),
                               Expanded(
-                                  child: TextField(
-                                    controller: _phoneNumberController,
-                                keyboardType: TextInputType.phone,
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Phone",
+                                child: TextField(
+                                  controller: _phoneNumberController,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Phone",
+                                  ),
+                                  // onChanged: _validatePhoneNumber,
                                 ),
-                              ))
+                              ),
                             ],
                           ),
                         ),
@@ -174,20 +198,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.check_circle_outline, color: Colors.green,),
+                              Icon(Icons.check_circle_outline, color: Colors
+                                  .green,),
                               Flexible(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
                                   child: RichText(
                                     text: TextSpan(
                                       children: [
                                         const TextSpan(
                                           text: 'By signing up you agree to the ',
-                                          style: TextStyle(color: Colors.black), // Default text color
+                                          style: TextStyle(color: Colors
+                                              .black), // Default text color
                                         ),
                                         TextSpan(
                                           text: 'Terms of service',
-                                          style: TextStyle(color: Colors.green.shade800), // Color for "Terms of service"
+                                          style: TextStyle(color: Colors.green
+                                              .shade800), // Color for "Terms of service"
                                           // You can also add onTap handler for clicking on "Terms of service"
                                           // onTap: () {
                                           //   // Handle onTap for Terms of service
@@ -195,11 +223,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         ),
                                         const TextSpan(
                                           text: ' and ',
-                                          style: TextStyle(color: Colors.black), // Default text color
+                                          style: TextStyle(color: Colors
+                                              .black), // Default text color
                                         ),
                                         TextSpan(
                                           text: 'Privacy policy',
-                                          style: TextStyle(color: Colors.green.shade800), // Color for "Privacy policy"
+                                          style: TextStyle(color: Colors.green
+                                              .shade800), // Color for "Privacy policy"
                                           // You can also add onTap handler for clicking on "Privacy policy"
                                           // onTap: () {
                                           //   // Handle onTap for Privacy policy
@@ -207,7 +237,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         ),
                                         const TextSpan(
                                           text: '.',
-                                          style: TextStyle(color: Colors.black), // Default text color
+                                          style: TextStyle(color: Colors
+                                              .black), // Default text color
                                         ),
                                       ],
                                     ),
@@ -220,21 +251,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(
                           height: 35.h,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // Get the phone number entered by the user
-                            String phoneNumber = _phoneNumberController.text;
+                    Builder(
+                      builder: (context) => TextButton(
+                        onPressed: _isFullNameFilled && _isPhoneNumberFilled
+                            ? () {
+                          // Get the phone number entered by the user
+                          String phoneNumber = _phoneNumberController.text;
+                          String fullName = _fullNameController.text;
+                          if (phoneNumber.length != 10 || !isNumeric(phoneNumber)) {
+                            _showMessage('Please enter a valid 10-digit phone number');
+                          } else {
                             // Call the sendOTP method with the phone number
                             sendOTP(phoneNumber);
-                          },
-                          style: ButtonStyle(
+                          }
+                        }
+                            : null,
+                        style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 MyColors.primaryColor),
                             minimumSize:
-                                MaterialStateProperty.all(Size(321.w, 38.h)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
+                            MaterialStateProperty.all(Size(321.w, 38.h)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
                           ),
                           child: Text(
                             "Sign up",
@@ -245,6 +285,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
+                    ),
                         SizedBox(
                           height: 50.h,
                         ),
@@ -314,4 +355,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
           )),
     );
   }
+
+  bool isNumeric(String value) {
+    if (value == null) {
+      return false;
+    }
+    return double.tryParse(value) != null;
+  }
 }
+
+
+// void _validatePhoneNumber(String value) {
+//     String name = _fullNameController.text;
+//     if (name.isEmpty) {
+//       _showErrorDialog("Please enter your name.");
+//     } else if (value.isEmpty) {
+//       _showErrorDialog("Please enter your phone number.");
+//     } else if (value.length != 10) {
+//       _showErrorDialog("Please enter a 10-digit phone number.");
+//     } else {
+//       setState(() {
+//         _phoneNumberError = null;
+//       });
+//     }
+//   }
+//
+//   void _showErrorDialog(String message) {
+//     showDialog(
+//       context: context,
+//       builder: (context) =>
+//           AlertDialog(
+//             title: Text("Validation Error"),
+//             content: Text(message),
+//             actions: [
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text("OK"),
+//               ),
+//             ],
+//           ),
+//     );
+// }
+

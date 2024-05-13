@@ -168,7 +168,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     // OTP verification successful, navigate to the next screen
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      MaterialPageRoute(builder: (context) => const LocationScreen()),
                     );
                   } else {
                     // OTP verification failed, show error message
